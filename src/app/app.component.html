@@ -1,0 +1,128 @@
+<div class="card m-3">
+  <div class="card-header text-center">
+    <h1 class="display-2">
+      <strong>{{ title }}</strong>
+    </h1>
+  </div>
+
+  <div class="card-body text-center">
+    <form [formGroup]="itemForm" (ngSubmit)="onSubmit()" class="container mt-5">
+      <div class="form-group">
+        <label for="placa">Placa:</label>
+        <input
+          type="text"
+          id="placa"
+          formControlName="placa"
+          class="form-control"
+        />
+        <div
+          *ngIf="itemForm.get('placa').invalid && itemForm.get('placa').touched"
+          class="text-danger"
+        >
+          Placa is required.
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="tipo">Tipo:</label>
+        <select id="tipo" formControlName="tipo" class="form-control">
+          <option value="">Select an option</option>
+          <option *ngFor="let option of tipos" [value]="option">
+            {{ option }}
+          </option>
+        </select>
+        <div
+          *ngIf="itemForm.get('tipo').invalid && itemForm.get('tipo').touched"
+          class="text-danger"
+        >
+          Tipo is required.
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="lat">Latitude:</label>
+        <input
+          type="number"
+          id="lat"
+          formControlName="lat"
+          class="form-control"
+        />
+        <div
+          *ngIf="itemForm.get('lat').invalid && itemForm.get('lat').touched"
+          class="text-danger"
+        >
+          Latitude is required.
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="lng">Longitude:</label>
+        <input
+          type="number"
+          id="lng"
+          formControlName="lng"
+          class="form-control"
+        />
+        <div
+          *ngIf="itemForm.get('lng').invalid && itemForm.get('lng').touched"
+          class="text-danger"
+        >
+          Longitude is required.
+        </div>
+      </div>
+      <button
+        type="submit"
+        [disabled]="itemForm.invalid"
+        class="btn btn-primary"
+      >
+        Iniciar recorrido
+      </button>
+    </form>
+    <br />
+
+    <google-map
+      height="500px"
+      width="100%"
+      [zoom]="zoom"
+      [center]="center"
+      [options]="options"
+      (mapClick)="click($event)"
+    >
+      <map-marker
+        #markerElem
+        *ngIf="marker?.position"
+        [position]="marker.position"
+        [label]="marker.label"
+        [title]="marker.title"
+        [options]="marker.options"
+        (mapClick)="clickMarker()"
+      >
+      </map-marker>
+      <map-polyline
+        [path]="polylinePath"
+        [options]="polylineOptions"
+      ></map-polyline>
+    </google-map>
+
+    <button (click)="zoomIn()">Zoom in</button>
+    <button (click)="zoomOut()">Zoom out</button>
+    <button (click)="logCenter()">Log center</button>
+  </div>
+  <div class="card-footer text-center">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Tiempo segundos</th>
+          <th>Orientacion</th>
+          <th>Distancia metros</th>
+          <th>Velocidad m/s</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let data of tableData">
+          <td>{{ data.tiempo / 1000 }}</td>
+          <td>{{ data.orientacion }}</td>
+          <td>{{ data.distancia }}</td>
+          <td>{{ data.velocidad }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
